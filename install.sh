@@ -7,8 +7,14 @@
 #  Usage: sudo bash install.sh
 # ============================================================
 
-# ── Auto-bootstrap for curl/wget ──
-if [[ ! -f "$(dirname "${BASH_SOURCE[0]:-$0}")/utils/helper.sh" ]] && [[ ! -f "./utils/helper.sh" ]]; then
+# ── Determine BASE_DIR or Auto-bootstrap ──
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]:-$0}")"
+
+if [[ -f "$SCRIPT_DIR/utils/helper.sh" ]]; then
+    BASE_DIR="$(cd "$SCRIPT_DIR" 2>/dev/null && pwd)"
+elif [[ -f "./utils/helper.sh" ]]; then
+    BASE_DIR="$(pwd)"
+else
     echo -e "\e[36m=> Downloading Ubuntu Server Bootstrap...\e[0m"
     
     SUDO=""
@@ -23,7 +29,7 @@ if [[ ! -f "$(dirname "${BASH_SOURCE[0]:-$0}")/utils/helper.sh" ]] && [[ ! -f ".
     # Try main branch first, then master
     DOWNLOAD_SUCCESS=false
     for branch in main master; do
-        if curl -fsSL "https://github.com/DMuhammad/ubuntu-server-bootstrap/archive/${branch}.tar.gz" -o /tmp/ubuntu-server-bootstrap.tar.gz; then
+        if curl -fsSL "https://github.com/dzikri/ubuntu-server-bootstrap/archive/${branch}.tar.gz" -o /tmp/ubuntu-server-bootstrap.tar.gz; then
             $SUDO tar -xzf /tmp/ubuntu-server-bootstrap.tar.gz -C /tmp/ubuntu-server-bootstrap --strip-components=1
             $SUDO rm -f /tmp/ubuntu-server-bootstrap.tar.gz
             DOWNLOAD_SUCCESS=true
@@ -39,8 +45,6 @@ if [[ ! -f "$(dirname "${BASH_SOURCE[0]:-$0}")/utils/helper.sh" ]] && [[ ! -f ".
     cd /tmp/ubuntu-server-bootstrap || exit 1
     exec $SUDO bash install.sh "$@"
 fi
-
-BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null || pwd)"
 
 # Load utilities
 source "$BASE_DIR/utils/helper.sh"
