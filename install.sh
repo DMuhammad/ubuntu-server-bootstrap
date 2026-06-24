@@ -16,15 +16,17 @@ if [[ ! -f "$(dirname "${BASH_SOURCE[0]:-$0}")/utils/helper.sh" ]] && [[ ! -f ".
         SUDO="sudo"
     fi
 
-    if ! command -v git &> /dev/null; then
-        $SUDO apt-get update -y > /dev/null 2>&1
-        $SUDO apt-get install -y git > /dev/null 2>&1
+    $SUDO rm -rf /tmp/ubuntu-server-bootstrap
+    $SUDO mkdir -p /tmp/ubuntu-server-bootstrap
+    
+    # Download tarball instead of git clone to avoid any authentication prompts
+    if ! curl -fsSL "https://github.com/dzikri/ubuntu-server-bootstrap/archive/refs/heads/main.tar.gz" | $SUDO tar -xz -C /tmp/ubuntu-server-bootstrap --strip-components=1; then
+        echo -e "\e[31mError: Failed to download repository. Is the repository public?\e[0m"
+        exit 1
     fi
     
-    $SUDO rm -rf /tmp/ubuntu-server-bootstrap
-    $SUDO git clone -q "https://github.com/dzikri/ubuntu-server-bootstrap.git" /tmp/ubuntu-server-bootstrap
     cd /tmp/ubuntu-server-bootstrap || exit 1
-    exec $SUDO bash install.sh
+    exec $SUDO bash install.sh "$@"
 fi
 
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null || pwd)"
