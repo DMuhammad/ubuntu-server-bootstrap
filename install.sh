@@ -20,7 +20,7 @@ if [[ ! -f "$(dirname "${BASH_SOURCE[0]:-$0}")/utils/helper.sh" ]] && [[ ! -f ".
     $SUDO mkdir -p /tmp/ubuntu-server-bootstrap
     
     # Download tarball instead of git clone to avoid any authentication prompts
-    if ! curl -fsSL "https://github.com/dzikri/ubuntu-server-bootstrap/archive/refs/heads/main.tar.gz" | $SUDO tar -xz -C /tmp/ubuntu-server-bootstrap --strip-components=1; then
+    if ! curl -fsSL "https://github.com/DMuhammad/ubuntu-server-bootstrap/archive/refs/heads/main.tar.gz" | $SUDO tar -xz -C /tmp/ubuntu-server-bootstrap --strip-components=1; then
         echo -e "\e[31mError: Failed to download repository. Is the repository public?\e[0m"
         exit 1
     fi
