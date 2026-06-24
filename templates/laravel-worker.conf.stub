@@ -1,0 +1,12 @@
+[program:__PROJECT__-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=__PHP_PATH__ __PROJECT_PATH__/artisan queue:work --sleep=3 --tries=3 --max-time=3600
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+user=www-data
+numprocs=__NUM_PROCS__
+redirect_stderr=true
+stdout_logfile=__PROJECT_PATH__/storage/logs/worker.log
+stopwaitsecs=3600
