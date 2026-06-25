@@ -26,16 +26,13 @@ else
     $SUDO mkdir -p /tmp/ubuntu-server-bootstrap
     
     # Download tarball instead of git clone to avoid any authentication prompts
-    # Try main branch first, then master
     DOWNLOAD_SUCCESS=false
-    for branch in main master; do
-        if curl -fsSL "https://github.com/dzikri/ubuntu-server-bootstrap/archive/${branch}.tar.gz" -o /tmp/ubuntu-server-bootstrap.tar.gz; then
-            $SUDO tar -xzf /tmp/ubuntu-server-bootstrap.tar.gz -C /tmp/ubuntu-server-bootstrap --strip-components=1
-            $SUDO rm -f /tmp/ubuntu-server-bootstrap.tar.gz
-            DOWNLOAD_SUCCESS=true
-            break
-        fi
-    done
+    if curl -fsSL "https://github.com/DMuhammad/ubuntu-server-bootstrap/archive/main.tar.gz" -o /tmp/ubuntu-server-bootstrap.tar.gz; then
+        $SUDO tar -xzf /tmp/ubuntu-server-bootstrap.tar.gz -C /tmp/ubuntu-server-bootstrap --strip-components=1
+        $SUDO rm -f /tmp/ubuntu-server-bootstrap.tar.gz
+        DOWNLOAD_SUCCESS=true
+        break
+    fi
 
     if [[ "$DOWNLOAD_SUCCESS" != "true" ]]; then
         echo -e "\e[31mError: Failed to download repository. Please check if the repository is public and uses main/master branch.\e[0m"
